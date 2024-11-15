@@ -3,10 +3,16 @@ import os
 import shutil
 from pathlib import Path
 
+SOURCE_BASE = "data/kinetics"  # Adjust this to your source videos path
+TARGET_BASE = "data/kinetics_processed"
+VIDEOS_PKL_PATH = "sports_videos.pkl"
+CLASS_LIST = ['baseball', 'basketball', 'soccer', 'cricket']
+SPLITS = ['train', 'val', 'test']
+
 def create_directory_structure(base_path):
     """Create the directory structure if it doesn't exist."""
-    for split in ['train', 'val', 'test']:
-        for sport in ['baseball', 'basketball', 'soccer', 'cricket']:
+    for split in SPLITS:
+        for sport in CLASS_LIST:
             path = os.path.join(base_path, split, sport)
             Path(path).mkdir(parents=True, exist_ok=True)
 
@@ -15,20 +21,17 @@ def format_video_filename(youtube_id, start_time, end_time):
     return f"{youtube_id}_{start_time:06d}_{end_time:06d}.mp4"
 
 def organize_videos():
-    # Paths
-    source_base = "data/kinetics"  # Adjust this to your source videos path
-    target_base = "data/kinetics_processed"
     
     # Load the pickle file
-    with open('sports_videos.pkl', 'rb') as f:
+    with open(VIDEOS_PKL_PATH, 'rb') as f:
         video_data = pickle.load(f)
     
     # Create directory structure
-    create_directory_structure(target_base)
+    create_directory_structure(TARGET_BASE)
     
     # Statistics counters
-    stats = {split: {sport: 0 for sport in ['baseball', 'basketball', 'soccer', 'cricket']} 
-            for split in ['train', 'val', 'test']}
+    stats = {split: {sport: 0 for sport in CLASS_LIST} 
+            for split in SPLITS}
     errors = []
     
     # Process each split
@@ -42,8 +45,8 @@ def organize_videos():
             # Process each video in the category
             for video_id in video_data[split][sport]:
                 video_file = format_video_filename(video_id, video_data[split][sport][video_id]['time_start'],  video_data[split][sport][video_id]['time_end'])
-                source_file = os.path.join(source_base, split, video_file)
-                target_file = os.path.join(target_base, split, sport, video_file)
+                source_file = os.path.join(SOURCE_BASE, split, video_file)
+                target_file = os.path.join(TARGET_BASE, split, sport, video_file)
                 
                 try:
                     if os.path.exists(source_file):

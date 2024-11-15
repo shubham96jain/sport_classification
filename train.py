@@ -172,7 +172,6 @@ def main():
         num_workers=Config.NUM_WORKERS
     )
 
-    # import pdb; pdb.set_trace()
     print(train_loader)
     # Initialize model
     if Config.MODEL == 'resnet3d':

@@ -30,7 +30,6 @@ def clean_validation_folder(csv_path, val_folder):
         for row in csvreader:
             if row:  # Check if row is not empty
                 action_class = row[0].strip('"')
-                # import pdb; pdb.set_trace()
                 time_start = int(row[2])
                 time_end = int(row[3])
                 if action_class in ALLOWED_CLASSES:
@@ -48,7 +47,6 @@ def clean_validation_folder(csv_path, val_folder):
     for filename in os.listdir(val_folder):
         total_files += 1
         video_id = filename.split('.')[0]  # Remove file extension to get video ID
-        # import pdb; pdb.set_trace()
         if filename not in valid_video_ids:
             file_path = os.path.join(val_folder, filename)
             try:
