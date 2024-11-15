@@ -5,6 +5,10 @@ import os
 
 from class_mapping import CLASSES
 
+ANNO_PATH = 'data/kinetics/annotations/'
+SELECTED_LABELS_PATH = 'kinetics_selected_labels.txt'
+VIDEOS_PKL_PATH = 'sports_videos.pkl'
+
 # Create reverse mapping from specific action to main sport
 ACTION_TO_SPORT = {}
 for sport, actions in CLASSES.items():
@@ -12,9 +16,8 @@ for sport, actions in CLASSES.items():
         ACTION_TO_SPORT[action] = sport
 
 # Read selected labels
-with open('kinetics_selected_labels.txt', 'r') as f:
+with open(SELECTED_LABELS_PATH, 'r') as f:
     selected_labels = [line.strip() for line in f if line.strip()]
-    # selected_labels = [line.strip().split('|')[1].strip() for line in f if line.strip()]
 
 # Create a nested dictionary structure
 video_data = defaultdict(dict)
@@ -24,7 +27,7 @@ files = ['val.csv', 'train.csv', 'test.csv']
 for filename in files:
     split = filename.split('.')[0]
     split_data = {}
-    with open(os.path.join('data/kinetics/annotations/', filename), 'r') as f:
+    with open(os.path.join(ANNO_PATH, filename), 'r') as f:
         csv_reader = csv.reader(f)
         header = next(csv_reader)  # Skip header
         
@@ -45,12 +48,7 @@ for filename in files:
                 
                 if sport_category not in split_data:
                     split_data[sport_category] = {}
-                # Store video info in the nested dictionary
-                # if youtube_id not in split_data[label]:
-                #     split_data[label][youtube_id] = {
-                #         'time_start': time_start,
-                #         'time_end': time_end
-                #     }
+
                 if youtube_id not in split_data[sport_category]:
                     split_data[sport_category][youtube_id] = {
                         'time_start': time_start,
@@ -63,7 +61,7 @@ for filename in files:
 video_data = dict(video_data)
 
 # Save to pickle file
-with open('sports_videos.pkl', 'wb') as f:
+with open(VIDEOS_PKL_PATH, 'wb') as f:
     pickle.dump(video_data, f)
 
 # Print some statistics

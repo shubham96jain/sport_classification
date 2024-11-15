@@ -65,15 +65,24 @@ def clean_validation_folder(csv_path, val_folder):
     print(f"Files remaining: {total_files - deleted_files}")
 
 if __name__ == "__main__":
+
     # Paths to your CSV file and validation folder
-    csv_path = "data/kinetics-dataset/k400/annotations/train.csv"
-    val_folder = "data/kinetics-dataset/k400/train"  # Adjust this path as needed
+    val_csv_path = "data/kinetics-dataset/k400/annotations/val.csv"
+    val_folder = "data/kinetics-dataset/k400/val"  # Adjust this path as needed
+
+    train_csv_path = "data/kinetics-dataset/k400/annotations/train.csv"
+    train_folder = "data/kinetics-dataset/k400/train"
+
+    test_csv_path = "data/kinetics-dataset/k400/annotations/test.csv"
+    test_folder = "data/kinetics-dataset/k400/test"
     
     # Confirm before proceeding
     print("This will delete files that don't belong to the specified sports classes.")
     response = input("Do you want to proceed? (yes/no): ")
     
     if response.lower() == 'yes':
-        clean_validation_folder(csv_path, val_folder)
+        clean_validation_folder(val_csv_path, val_folder)
+        clean_validation_folder(train_csv_path, train_folder)
+        clean_validation_folder(test_csv_path, test_folder)
     else:
         print("Operation cancelled.")
